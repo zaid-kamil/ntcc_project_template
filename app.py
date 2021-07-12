@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_folium import folium_static
-
+import plotly.express as px
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -20,7 +20,7 @@ df = load_data()
 # menu
 options = [
             'Introduction',
-            'About'
+            'About',
             'Geo Visualization',
             'Analysis - Univariate',
             'Analysis-Bivarite',
@@ -49,8 +49,23 @@ if menu == options[0]:
     )
     folium_static(map)
 
+    fig = px.choropleth_mapbox(
+        states_df,
+        geojson='https://gist.githubusercontent.com/jbrobst/56c13bbbf9d97d187fea01ca62ea5112/raw/e388c4cae20aa53cb5090210a42ebb9b765c0a36/india_states.geojson',
+        color='Deaths',
+        title='deaths_by_state',
+        locations='State/UnionTerritory',
+        featureidkey='properties.ST_NM',
+        mapbox_style="carto-positron",
+        zoom=3,
+        )       
+    fig.update_geos(fitbounds="locations", visible=False)
+    st.plotly_chart(fig)
+    
 if menu == options[1]:
+    
     st.title("Univariate Analysis")
 
 if menu == options[2]:
     st.title("Bivariate Analysis")
+
